@@ -1,0 +1,115 @@
+import re
+try:
+    f = open("database.txt", "x")
+except Exception as ex:
+    pass
+
+def login():
+    Username = input("Enter username(email):")
+    Password = input("Enter password:")
+
+    if not len(Username or Password) < 1:
+        db = open("database.txt", "r")
+        d = []
+        f = []
+        for i in db:
+            a,b = i.split(",")
+            b = b.strip()
+            c = a,b
+            d.append(a)
+            f.append(b)
+        data = dict(zip(d, f))
+        try:
+            if data[Username]:
+                try:
+                    if Password == data[Username]:
+                        print("Login success!")
+                        print("Hi", Username)
+                    else:
+                        print("Incorrect password or username")
+                except:
+                    print("Incorrect password or username")
+            else:
+                print("Password or username doesn't exist")
+        except:
+            print("Password or username doesn't exist")
+    else:
+        print("Username or password is empty please provide valid data")
+        login()
+
+def register(Username = None, ):
+    Username = input("Enter username(email):")
+    password = input("Enter password:")
+    flag = 0
+    flagm = 0
+    if not (len(password)<16 and len(password)>=5):
+        flag = -1
+        print('***Not satisfied Password Rule 1***')
+    elif not re.search("[a-z]", password):
+        flag = -1
+        print('***Not satisfied Password Rule 2***')
+    elif not re.search("[A-Z]", password):
+        flag = -1
+        print('***Not satisfied Password Rule 3***')
+    elif not re.search("[0-9]", password):
+        flag = -1
+        print('***Not satisfied Password Rule 4***')
+    elif not re.search("[@_!#$%^&*(2)<>?/\|}{~:]", password):
+        flag = -1
+        print('***Not satisfied Password Rule 5***')
+    elif re.search("\s", password):
+        flag = -1
+        print('***Not satisfied Password Rule 6***') 
+    
+    regex = re.compile(r'([A-Za-z0-9]+[.-_])*[A-Za-z0-9]+@[A-Za-z0-9-]+(\.[A-Z|a-z]{2,})+')
+    if(re.fullmatch(regex, Username)):
+        flagm = 0
+
+    else:
+        flagm = -1
+        print("****Invalid Email*****")
+    if flag == 0 and flagm == 0:
+        db = open("database.txt", "r")
+        d = []
+        for i in db:
+            a,b = i.split(",")
+            b = b.strip()
+            c = a,b
+            d.append(a)
+
+        if not Username == None:
+            if len(Username) <1:
+                print("Please provide username")
+            elif Username in d:
+                print("Username exists provide different username")
+            else:
+                db = open("database.txt", "a")
+                db.write(Username+", "+password+"\n")
+                print("Registration successfull..!")
+
+
+    else:
+        print("Rules for Username and Password creation")
+        print("Username Rule 1: Username should have @")
+        print("Username Rule 2: Username should not have '.' immediate next to '@'")
+        print("Username Rule 3: Username should not start with special character")
+        print("Password Rule 1: Password length should be between 5 and 16")
+        print("Password Rule 2: Password should have atleast one smallcase alphabet")
+        print("Password Rule 3: Password should have atleast one uppercase alphabet")
+        print("Password Rule 4: Password should have atleast one digit ")
+        print("Password Rule 5: Password should have atleast one special character ")
+        print("Password Rule 6: Password should not contain space")
+
+
+
+def main():
+    option = input("Enter 1 to Login and 2 for Registration : ")
+    if option == "1":
+        login()
+    elif option == "2":
+        register()
+    else:
+        print("Please enter a valid number 1 or 2")
+
+main()
+    
