@@ -27,17 +27,26 @@ def login():
                         print("Hi", Username)
                     else:
                         print("Incorrect password or username")
+                        rest = input("Select 3  if you have forgotten your password  or 4 to Register : ")
+                        if rest == "3":
+                            forgot_password()
+                        elif rest =='4':
+                            register()
+                        else:
+                            print("Invalid option")
                 except:
                     print("Incorrect password or username")
             else:
-                print("Password or username doesn't exist")
+                print("User doesn't exist Please Register")
+                register()
         except:
             print("Password or username doesn't exist")
     else:
         print("Username or password is empty please provide valid data")
         login()
+        
 
-def register(Username = None, ):
+def register():
     Username = input("Enter username(email):")
     password = input("Enter password:")
     flag = 0
@@ -101,7 +110,32 @@ def register(Username = None, ):
         print("Password Rule 6: Password should not contain space")
 
 
+def forgot_password():
+    Username = input("Enter Username to fetch your password :")
 
+    if not len(Username) < 1:
+        db = open("database.txt", "r")
+        d = []
+        f = []
+        for i in db:
+            a,b = i.split(",")
+            b = b.strip()
+            c = a,b
+            d.append(a)
+            f.append(b)
+        data = dict(zip(d, f))
+        try:
+            if data[Username]:
+                print(data[Username])
+            else:
+                print("User doesn't exist please Register")
+                register()
+        except:
+            print("Password or username doesn't exist")
+    else:
+        print("Username is empty please provide valid data")
+        forgot_password()
+    
 def main():
     option = input("Enter 1 to Login and 2 for Registration : ")
     if option == "1":
